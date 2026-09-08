@@ -1,0 +1,1 @@
+# Starting learning Node Mailer for sending mails, which will be used in further bigger projects.
