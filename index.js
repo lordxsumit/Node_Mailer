@@ -1,11 +1,8 @@
+import "dotenv/config";
 import express from "express";
 import nm from "nodemailer";
 import Mail from "./mail.js";
 
-import dotenv from "dotenv";
-dotenv.config({
-    path: '.env'
-})
 
 const app = express()
 
@@ -46,6 +43,7 @@ app.get('/', (req, res) => {
     res.send('Hello World')
 
     const mail = new Mail();
+    mail.setSenderEmail(process.env.EMAIL)
     mail.sendTo(process.env.TO_EMAIL)
     mail.setSubject('Subject')
     mail.setText('Hello from coder sumit')
