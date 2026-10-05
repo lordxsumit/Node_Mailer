@@ -6,6 +6,9 @@ import Mail from "./mail.js";
 
 const app = express()
 
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+
                                                         // Method-1
 // const transporter = nm.createTransport({
 //     service: "gmail",
@@ -39,15 +42,38 @@ const app = express()
 // })
 
                                                         // Method-2 (Using proper class)
-app.get('/', (req, res) => {
-    res.send('Hello World')
+// app.get('/', (req, res) => {
+//     res.send('Hello World')
+
+//     const mail = new Mail();
+//     mail.setSenderEmail(process.env.EMAIL)
+//     mail.sendTo(process.env.TO_EMAIL)
+//     mail.setSubject('Subject')
+//     mail.setText('Hello from coder sumit')
+//     mail.send()
+// })
+
+                                                    // Method-3 (Sending HTML content and Templates)
+app.post('/mail', (req, res) => {
+    const {receiver_id, subject, text, html} = req.body;
+
+    if (!receiver_id){
+        return res
+        .status(400)
+        .json({ 
+            error: 'receiver_id is required' 
+        })
+    }
 
     const mail = new Mail();
     mail.setSenderEmail(process.env.EMAIL)
-    mail.sendTo(process.env.TO_EMAIL)
-    mail.setSubject('Subject')
-    mail.setText('Hello from coder sumit')
+    mail.sendTo(receiver_id)
+    mail.setSubject(subject)
+    mail.setText(text)
+    mail.setHtml(html)
+
     mail.send()
+    res.send('Email sent!')
 })
 
 
