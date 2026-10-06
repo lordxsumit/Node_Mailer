@@ -2,6 +2,8 @@ import "dotenv/config";
 import express from "express";
 import nm from "nodemailer";
 import Mail from "./mail.js";
+import fs from 'node:fs';
+import path from "path";
 
 
 const app = express()
@@ -53,7 +55,7 @@ app.use(express.urlencoded({ extended: true }))
 //     mail.send()
 // })
 
-                                                    // Method-3 (Sending HTML content and Templates)
+                                                    // Method-3 (Sending HTML content)
 app.post('/mail', (req, res) => {
     const {receiver_id, subject, text, html} = req.body;
 
@@ -65,12 +67,16 @@ app.post('/mail', (req, res) => {
         })
     }
 
+    let htmlData = fs.readFileSync(new URL("./test.html", import.meta.url), "utf8")
+    console.log(htmlData);
+
     const mail = new Mail();
     mail.setSenderEmail(process.env.EMAIL)
     mail.sendTo(receiver_id)
     mail.setSubject(subject)
     mail.setText(text)
-    mail.setHtml(html)
+    // mail.setHtml(html)
+    mail.setHtml(htmlData)
 
     mail.send()
     res.send('Email sent!')

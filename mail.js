@@ -7,7 +7,7 @@ const transporter = nm.createTransport({
     port: 587,
     auth: {
         user: process.env.EMAIL,
-        pass: process.env.PASSWORD
+        pass: process.env.PASSWORD      // This is an APP password.
     }
 })
 
