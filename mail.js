@@ -37,13 +37,28 @@ class Mail{
     }
 
     /**
-     * @param {string} receiver
+     * @param {string | string[]} receiver
      */
-    sendTo(receiver){
-        /**
-         * @type {string}
-         */
-        this.mailOptions.to = receiver;
+    // sendTo(receiver){                    // Used for sending mail to single user
+    //     /**
+    //      * @type {string}
+    //      */
+    //     this.mailOptions.to = receiver;
+    // }
+
+    sendTo(receiver){                       // Used for sending mail to multiple user's
+        const receivers = Array.isArray(receiver) ? receiver : [receiver];
+        this.mailOptions.to = [...(this.mailOptions.to || []), ...receivers];
+    }
+    setCC(cc){
+        let ccs = this.mailOptions.cc || [];
+        ccs.push(cc)
+        this.mailOptions.cc = ccs;
+    }
+    setBCC(bcc){
+        let bccs = this.mailOptions.bcc || [];
+        bccs.push(bcc)
+        this.mailOptions.bcc = bccs;
     }
 
     /**
@@ -73,18 +88,8 @@ class Mail{
         this.mailOptions.html = html;
     }
 
-    /**
-     * @return {void}
-     */
     send(){
-        transporter.sendMail(this.mailOptions, (error, info) => {
-            if(error){
-                console.log(error);
-            }
-            else{
-                console.log("Email sent: " + info.response);
-            }
-        })
+        return transporter.sendMail(this.mailOptions);
     }
 }
 
