@@ -88,6 +88,13 @@ class Mail{
         this.mailOptions.html = html;
     }
 
+
+    setAttachements(attachment){
+        let attachments = this.mailOptions.attachments || [];
+        attachments.push(attachment);
+        this.mailOptions.attachments = attachments;
+    }
+
     send(){
         return transporter.sendMail(this.mailOptions);
     }

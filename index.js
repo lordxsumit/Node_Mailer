@@ -80,25 +80,51 @@ app.use(express.urlencoded({ extended: true }))
 // })
 
                                                 // Method-4 (Sending Emails to multiple users using CC and BCC)
-app.post('/mail', async (req, res) => {
-    const {recipients, subject, text, html, cc, bcc} = req.body;
+// app.post('/mail', async (req, res) => {
+//     const {recipients, subject, text, html, cc, bcc} = req.body;
 
-    if (!Array.isArray(recipients) || recipients.length === 0) {
+//     if (!Array.isArray(recipients) || recipients.length === 0) {
+//         return res
+//         .status(400)
+//         .json({ 
+//             error: 'recipients must be a non-empty array of email addresses'
+//         })
+//     }
+
+//     const mail = new Mail();
+//     mail.sendTo(recipients)
+//     mail.setSubject(subject)
+//     mail.setText(text)
+//     mail.setCC(cc)
+//     mail.setBCC(bcc)
+
+//     mail.send()
+// })
+
+                                            // Method-5 (Sending attachments with email)
+app.post('/mail', (req, res) => {
+    const {receiver_id, subject, text, html} = req.body;
+
+    if (!receiver_id){
         return res
         .status(400)
-        .json({ 
-            error: 'recipients must be a non-empty array of email addresses'
+        .json({
+            error: 'receiver_id is required'
         })
     }
 
     const mail = new Mail();
-    mail.sendTo(recipients)
+    mail.setSenderEmail(process.env.EMAIL)
+    mail.sendTo(receiver_id)
     mail.setSubject(subject)
     mail.setText(text)
-    mail.setCC(cc)
-    mail.setBCC(bcc)
+    mail.setAttachements({
+        filename: '1580738778255.jpg',
+        path: './1580738778255.jpg'
+    })
 
     mail.send()
+    res.send('Email sent!')
 })
 
 
